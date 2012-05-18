@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+
+  <title>YARD Viewer</title>
+
+  <script type="text/javascript">
+    var ENV = {
+      CP_DEFAULT_CACHEABLE:   true,
+      VIEW_PRESERVES_CONTEXT: true
+    };
+  </script>
+  <script src="jquery-1.7.2.min.js" type="text/javascript"></script>
+  <script src="ember.js" type="text/javascript"></script>
+  <script src="app.js" type="text/javascript"></script>
+  <script src="yard.json.js" type="text/javascript"></script>
+</head>
+<body>
+  <script type="text/x-handlebars">
+    <ul>
+    {{#each YardViewer.modulesController}}
+      <li>{{name}}</li>
+    {{/each}}
+    </ul>
+  </script>
+</body>
+</html>
