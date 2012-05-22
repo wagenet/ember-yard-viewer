@@ -1714,7 +1714,7 @@ if ('undefined' === typeof Ember) {
 /**
   @namespace
   @name Ember
-  @version 0.9.7.1
+  @version 0.9.8
 
   All Ember methods and functions are defined inside of this namespace.
   You generally should not add new properties to this namespace as it may be
@@ -1753,10 +1753,10 @@ Ember.toString = function() { return "Ember"; };
 /**
   @static
   @type String
-  @default '0.9.7.1'
+  @default '0.9.8'
   @constant
 */
-Ember.VERSION = '0.9.7.1';
+Ember.VERSION = '0.9.8';
 
 /**
   @static
@@ -1806,28 +1806,26 @@ Ember.SHIM_ES5 = (Ember.ENV.SHIM_ES5 === false) ? false : Ember.EXTEND_PROTOTYPE
 /**
   @static
   @type Boolean
-  @default false
+  @default true
   @constant
 
   Determines whether computed properties are cacheable by default.
-  In future releases this will default to `true`. For the 1.0 release,
-  the option to turn off caching by default will be removed entirely.
+  This option will be removed for the 1.1 release.
 
   When caching is enabled by default, you can use `volatile()` to disable
   caching on individual computed properties.
 */
-Ember.CP_DEFAULT_CACHEABLE = !!Ember.ENV.CP_DEFAULT_CACHEABLE;
+Ember.CP_DEFAULT_CACHEABLE = (Ember.ENV.CP_DEFAULT_CACHEABLE !== false);
 
 /**
   @static
   @type Boolean
-  @default false
+  @default true
   @constant
 
   Determines whether views render their templates using themselves
-  as the context, or whether it is inherited from the parent. In
-  future releases, this will default to `true`. For the 1.0 release,
-  the option to have views change context by default will be removed entirely.
+  as the context, or whether it is inherited from the parent. This option
+  will be removed in the 1.1 release.
 
   If you need to update your application to use the new context rules, simply
   prefix property access with `view.`:
@@ -1852,7 +1850,7 @@ Ember.CP_DEFAULT_CACHEABLE = !!Ember.ENV.CP_DEFAULT_CACHEABLE;
         {{/view}}
       {{/each}}
 */
-Ember.VIEW_PRESERVES_CONTEXT = !!Ember.ENV.VIEW_PRESERVES_CONTEXT;
+Ember.VIEW_PRESERVES_CONTEXT = (Ember.ENV.VIEW_PRESERVES_CONTEXT !== false);
 
 /**
   Empty function.  Useful for some operations.
@@ -1884,6 +1882,7 @@ if ('undefined' === typeof ember_assert) { window.ember_assert = Ember.K; }
 if ('undefined' === typeof ember_warn) { window.ember_warn = Ember.K; }
 if ('undefined' === typeof ember_deprecate) { window.ember_deprecate = Ember.K; }
 if ('undefined' === typeof ember_deprecateFunc) {
+  /** @private */
   window.ember_deprecateFunc = function(_, func) { return func; };
 }
 
@@ -6334,7 +6333,7 @@ mixinProperties(Binding,
 
   Ember's built in binding creation method makes it easy to automatically
   create bindings for you. You should always use the highest-level APIs
-  available, even if you understand how to it works underneath.
+  available, even if you understand how it works underneath.
 
   @since Ember 0.9
 */
@@ -11883,7 +11882,7 @@ Ember.Application = Ember.Namespace.extend(
         ...
       });
 
-      App.injectControllers(stateManager);
+      App.initialize(stateManager);
 
       stateManager.get('postsController')     // <App.PostsController:ember1234>
       stateManager.get('commentsController')  // <App.CommentsController:ember1235>
@@ -12092,7 +12091,7 @@ Ember.Location = {
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
 
-Ember.assert("Ember requires jQuery 1.6 or 1.7", window.jQuery && window.jQuery().jquery.match(/^1\.[67](\.\d+)?(pre|rc\d?)?/));
+Ember.assert("Ember Views require jQuery 1.6 or 1.7", window.jQuery && window.jQuery().jquery.match(/^1\.[67](\.\d+)?(pre|rc\d?)?/));
 Ember.$ = window.jQuery;
 
 })();
@@ -12819,7 +12818,7 @@ var invokeForState = {
         classNames: ['my-class', 'my-other-class']
       })
 
-  Will result view instances with HTML representation of:
+  Will result in view instances with an HTML representation of:
 
       <div id="ember1" class="ember-view my-class my-other-class"></div>
 
@@ -12836,7 +12835,7 @@ var invokeForState = {
         }.property()
       })
 
-  Will result view instances with HTML representation of:
+  Will result in view instances with an HTML representation of:
 
       <div id="ember1" class="ember-view from-a from-b"></div>
 
@@ -12849,7 +12848,7 @@ var invokeForState = {
         hovered: true
       })
 
-  Will result view instances with HTML representation of:
+  Will result in view instances with an HTML representation of:
 
       <div id="ember1" class="ember-view hovered"></div>
 
@@ -12862,37 +12861,37 @@ var invokeForState = {
         awesome: true
       })
 
-  Will result view instances with HTML representation of:
+  Will result in view instances with an HTML representation of:
 
-       <div id="ember1" class="ember-view so-very-cool"></div>
+      <div id="ember1" class="ember-view so-very-cool"></div>
 
 
   Boolean value class name bindings whose property names are in a camelCase-style
   format will be converted to a dasherized format:
 
-        MyView = Ember.View.extend({
-          classNameBindings: ['isUrgent'],
-          isUrgent: true
-        })
+      MyView = Ember.View.extend({
+        classNameBindings: ['isUrgent'],
+        isUrgent: true
+      })
 
-  Will result view instances with HTML representation of:
+  Will result in view instances with an HTML representation of:
 
-        <div id="ember1" class="ember-view is-urgent"></div>
+      <div id="ember1" class="ember-view is-urgent"></div>
 
 
   Class name bindings can also refer to object values that are found by
   traversing a path relative to the view itself:
 
-        MyView = Ember.View.extend({
-          classNameBindings: ['messages.empty']
-          messages: Ember.Object.create({
-            empty: true
-          })
+      MyView = Ember.View.extend({
+        classNameBindings: ['messages.empty']
+        messages: Ember.Object.create({
+          empty: true
         })
+      })
 
-  Will result view instances with HTML representation of:
+  Will result in view instances with an HTML representation of:
 
-        <div id="ember1" class="ember-view empty"></div>
+      <div id="ember1" class="ember-view empty"></div>
 
   Updates to the the value of a class name binding will result in automatic update 
   of the  HTML `class` attribute in the view's rendered HTML representation.
@@ -12912,7 +12911,7 @@ var invokeForState = {
         href: 'http://google.com'
       })
 
-  Will result view instances with HTML representation of:
+  Will result in view instances with an HTML representation of:
 
       <a id="ember1" class="ember-view" href="http://google.com"></a>
 
@@ -12926,7 +12925,7 @@ var invokeForState = {
         disabled: true
       })
 
-  Will result view instances with HTML representation of:
+  Will result in view instances with an HTML representation of:
 
       <input id="ember1" class="ember-view" disabled="disabled" />
 
@@ -12960,7 +12959,7 @@ var invokeForState = {
         template: Ember.Handlebars.compile('I am the template')
       })
 
-  Will result view instances with HTML representation of:
+  Will result in view instances with an HTML representation of:
 
       <div id="ember1" class="ember-view">I am the template</div>
 
@@ -12979,7 +12978,7 @@ var invokeForState = {
         }
       })
 
-  Will result in HTML representation of:
+  Will result in an HTML representation of:
 
       <div id="ember1" class="ember-view">Hello Barry!!!</div>
 
@@ -13012,7 +13011,7 @@ var invokeForState = {
         templateName: null
       })
 
-  Will result in instances with HTML representation of:
+  Will result in instances with an HTML representation of:
 
       <div id="ember1" class="ember-view">I was the default</div>
 
@@ -13026,7 +13025,7 @@ var invokeForState = {
         template: Ember.Handlebars.compile('I was the template, not default')
       })
 
-  Will result in HTML representation when rendered:
+  Will result in the following HTML representation when rendered:
 
       <div id="ember1" class="ember-view">I was the template, not default</div>
 
@@ -13047,8 +13046,7 @@ var invokeForState = {
         template: Ember.Handlebars.compile("I got wrapped"),
       })
 
-
-  Will result in instances with HTML representation of:
+  Will result in view instances with an HTML representation of:
 
       <div id="ember1" class="ember-view">
         <div class="my-decorative-class">
@@ -16007,7 +16005,7 @@ var get = Ember.get, set = Ember.set, getPath = Ember.getPath, fmt = Ember.Strin
             return 'passive';
           }
         }.property(),
-        active: Ember.State.create({})
+        active: Ember.State.create({}),
         passive: Ember.State.create({})
       })
 
@@ -16017,15 +16015,15 @@ var get = Ember.get, set = Ember.set, getPath = Ember.getPath, fmt = Ember.Strin
 
   Calling `goToState` transitions between states:
 
-       robotManager = Ember.StateManager.create({
+      robotManager = Ember.StateManager.create({
         initialState: 'poweredDown',
-         poweredDown: Ember.State.create({}),
-         poweredUp: Ember.State.create({})
-       })
+        poweredDown: Ember.State.create({}),
+        poweredUp: Ember.State.create({})
+      })
 
-       robotManager.getPath('currentState.name') // 'poweredDown'
-       robotManager.goToState('poweredUp')
-       robotManager.getPath('currentState.name') // 'poweredUp'
+      robotManager.getPath('currentState.name') // 'poweredDown'
+      robotManager.goToState('poweredUp')
+      robotManager.getPath('currentState.name') // 'poweredUp'
 
   Before transitioning into a new state the existing `currentState` will have its
   `exit` method called with the StateManager instance as its first argument and 
@@ -16036,7 +16034,7 @@ var get = Ember.get, set = Ember.set, getPath = Ember.getPath, fmt = Ember.Strin
   an object representing the transition as its second argument.
 
       robotManager = Ember.StateManager.create({
-       initialState: 'poweredDown',
+        initialState: 'poweredDown',
         poweredDown: Ember.State.create({
           exit: function(stateManager, transition){
             console.log("exiting the poweredDown state")
@@ -16061,7 +16059,7 @@ var get = Ember.get, set = Ember.set, getPath = Ember.getPath, fmt = Ember.Strin
   manager does not have will result in no changes in the StateManager's current state:
 
       robotManager = Ember.StateManager.create({
-       initialState: 'poweredDown',
+        initialState: 'poweredDown',
         poweredDown: Ember.State.create({
           exit: function(stateManager, transition){
             console.log("exiting the poweredDown state")
@@ -16090,98 +16088,97 @@ var get = Ember.get, set = Ember.set, getPath = Ember.getPath, fmt = Ember.Strin
   via a single goToState with the full path to the specific state. The StateManager will also 
   keep track of the full path to its currentState
 
+      robotManager = Ember.StateManager.create({
+        initialState: 'poweredDown',
+        poweredDown: Ember.State.create({
+          charging: Ember.State.create(),
+          charged: Ember.State.create()
+        }),
+        poweredUp: Ember.State.create({
+          mobile: Ember.State.create(),
+          stationary: Ember.State.create()
+        })
+      })
+
+      robotManager.getPath('currentState.name') // 'poweredDown'
+
+      robotManager.goToState('poweredUp')
+      robotManager.getPath('currentState.name') // 'poweredUp'
+
+      robotManager.goToState('mobile')
+      robotManager.getPath('currentState.name') // 'mobile'
+
+      // transition via a state path
+      robotManager.goToState('poweredDown.charging')
+      robotManager.getPath('currentState.name') // 'charging'
+
+      robotManager.getPath('currentState.get.path') // 'poweredDown.charging'
+
+  Enter transition methods will be called for each state and nested child state in their
+  hierarchical order.  Exit methods will be called for each state and its nested states in
+  reverse hierarchical order.
+
+  Exit transitions for a parent state are not called when entering into one of its child states,
+  only when transitioning to a new section of possible states in the hierarchy.
 
       robotManager = Ember.StateManager.create({
         initialState: 'poweredDown',
-         poweredDown: Ember.State.create({
-           charging: Ember.State.create(),
-           charged: Ember.State.create()
-         }),
-         poweredUp: Ember.State.create({
-           mobile: Ember.State.create(),
-           stationary: Ember.State.create()
-         })
-       })
-
-       robotManager.getPath('currentState.name') // 'poweredDown'
-
-       robotManager.goToState('poweredUp')
-       robotManager.getPath('currentState.name') // 'poweredUp'
-
-       robotManager.goToState('mobile')
-       robotManager.getPath('currentState.name') // 'mobile'
-
-       // transition via a state path
-       robotManager.goToState('poweredDown.charging')
-       robotManager.getPath('currentState.name') // 'charging'
-
-       robotManager.getPath('currentState.get.path') // 'poweredDown.charging'
-
-    Enter transition methods will be called for each state and nested child state in their 
-    hierarchical order.  Exit methods will be called for each state and its nested states in
-    reverse hierarchical order.
-
-    Exit transitions for a parent state are not called when entering into one of its child states,
-    only when transitioning to a new section of possible states in the hierarchy.
-
-       robotManager = Ember.StateManager.create({
-         initialState: 'poweredDown',
-          poweredDown: Ember.State.create({
+        poweredDown: Ember.State.create({
+          enter: function(){},
+          exit: function(){
+            console.log("exited poweredDown state")
+          },
+          charging: Ember.State.create({
             enter: function(){},
-            exit: function(){
-              console.log("exited poweredDown state")
-            },
-            charging: Ember.State.create({
-              enter: function(){},
-              exit: function(){}
-            }),
-            charged: Ember.State.create({
-              enter: function(){
-                console.log("entered charged state")
-              },
-              exit: function(){
-                console.log("exited charged state")
-              }
-            })
+            exit: function(){}
           }),
-          poweredUp: Ember.State.create({
+          charged: Ember.State.create({
             enter: function(){
-              console.log("entered poweredUp state")
+              console.log("entered charged state")
             },
-            exit: function(){},
-            mobile: Ember.State.create({
-              enter: function(){
-                console.log("entered mobile state")
-              },
-              exit: function(){}
-            }),
-            stationary: Ember.State.create({
-              enter: function(){},
-              exit: function(){}
-            })
+            exit: function(){
+              console.log("exited charged state")
+            }
+          })
+        }),
+        poweredUp: Ember.State.create({
+          enter: function(){
+            console.log("entered poweredUp state")
+          },
+          exit: function(){},
+          mobile: Ember.State.create({
+            enter: function(){
+              console.log("entered mobile state")
+            },
+            exit: function(){}
+          }),
+          stationary: Ember.State.create({
+            enter: function(){},
+            exit: function(){}
           })
         })
+      })
 
 
-        robotManager.get('currentState.get.path') // 'poweredDown'
-        robotManager.goToState('charged')
-        // logs 'entered charged state'
-        // but does *not* log  'exited poweredDown state'
-        robotManager.getPath('currentState.name') // 'charged
+      robotManager.get('currentState.get.path') // 'poweredDown'
+      robotManager.goToState('charged')
+      // logs 'entered charged state'
+      // but does *not* log  'exited poweredDown state'
+      robotManager.getPath('currentState.name') // 'charged
 
-        robotManager.goToState('poweredUp.mobile')
-        // logs
-        // 'exited charged state'
-        // 'exited poweredDown state'
-        // 'entered poweredUp state'
-        // 'entered mobile state'
+      robotManager.goToState('poweredUp.mobile')
+      // logs
+      // 'exited charged state'
+      // 'exited poweredDown state'
+      // 'entered poweredUp state'
+      // 'entered mobile state'
 
   During development you can set a StateManager's `enableLogging` property to `true` to
   receive console messages of state transitions.
 
-        robotManager = Ember.StateManager.create({
-          enableLogging: true
-        })
+      robotManager = Ember.StateManager.create({
+        enableLogging: true
+      })
 
   ## Managing currentState with Actions
   To control which transitions between states are possible for a given state, StateManager
@@ -16213,11 +16210,11 @@ var get = Ember.get, set = Ember.set, getPath = Ember.getPath, fmt = Ember.Strin
       // with managerA as the first argument
       // and no second argument
 
-       someObject = {}
-       managerA.send('anAction', someObject)
-       // the 'anAction' method of 'stateOne.substateOne' is called again
-       // with managerA as the first argument and
-       // someObject as the second argument.
+      someObject = {}
+      managerA.send('anAction', someObject)
+      // the 'anAction' method of 'stateOne.substateOne' is called again
+      // with managerA as the first argument and
+      // someObject as the second argument.
 
 
   If the StateManager attempts to send an action but does not find an appropriately named
@@ -16225,68 +16222,68 @@ var get = Ember.get, set = Ember.set, getPath = Ember.getPath, fmt = Ember.Strin
   it will throw a new Ember.Error. Action detection only moves upwards through the state hierarchy
   from the current state. It does not search in other portions of the hierarchy.
 
-        managerB = Ember.StateManager.create({
-          initialState: 'stateOne.substateOne.subsubstateOne',
-          stateOne: Ember.State.create({
-            substateOne: Ember.State.create({
-              subsubstateOne: Ember.State.create({})
-            })
-          }),
-          stateTwo: Ember.State.create({
-           anAction: function(manager, context){
-             // will not be called below because it is
-             // not a parent of the current state
-           }
+      managerB = Ember.StateManager.create({
+        initialState: 'stateOne.substateOne.subsubstateOne',
+        stateOne: Ember.State.create({
+          substateOne: Ember.State.create({
+            subsubstateOne: Ember.State.create({})
           })
+        }),
+        stateTwo: Ember.State.create({
+         anAction: function(manager, context){
+           // will not be called below because it is
+           // not a parent of the current state
+         }
         })
+      })
 
-        managerB.getPath('currentState.name') // 'subsubstateOne'
-        managerB.send('anAction')
-        // Error: <Ember.StateManager:ember132> could not
-        // respond to event anAction in state stateOne.substateOne.subsubstateOne.
+      managerB.getPath('currentState.name') // 'subsubstateOne'
+      managerB.send('anAction')
+      // Error: <Ember.StateManager:ember132> could not
+      // respond to event anAction in state stateOne.substateOne.subsubstateOne.
 
   Inside of an action method the given state should delegate `goToState` calls on its
   StateManager.
 
-        robotManager = Ember.StateManager.create({
-          initialState: 'poweredDown.charging',
-           poweredDown: Ember.State.create({
-             charging: Ember.State.create({
-                chargeComplete: function(manager, context){
-                  manager.goToState('charged')
-                }
-             }),
-             charged: Ember.State.create({
-               boot: function(manager, context){
-                  manager.goToState('poweredUp')
-               }
-             })
-           }),
-           poweredUp: Ember.State.create({
-             beginExtermination: function(manager, context){
-                manager.goToState('rampaging')
-             },
-             rampaging: Ember.State.create()
-           })
-         })
+      robotManager = Ember.StateManager.create({
+        initialState: 'poweredDown.charging',
+        poweredDown: Ember.State.create({
+          charging: Ember.State.create({
+            chargeComplete: function(manager, context){
+              manager.goToState('charged')
+            }
+          }),
+          charged: Ember.State.create({
+            boot: function(manager, context){
+              manager.goToState('poweredUp')
+            }
+          })
+        }),
+        poweredUp: Ember.State.create({
+          beginExtermination: function(manager, context){
+            manager.goToState('rampaging')
+          },
+          rampaging: Ember.State.create()
+        })
+      })
 
-         robotManager.getPath('currentState.name') // 'charging'
-         robotManager.send('boot') // throws error, no boot action  
-                                   // in current hierarchy
-         robotManager.getPath('currentState.name') // remains 'charging'
+      robotManager.getPath('currentState.name') // 'charging'
+      robotManager.send('boot') // throws error, no boot action
+                                // in current hierarchy
+      robotManager.getPath('currentState.name') // remains 'charging'
 
-         robotManager.send('beginExtermination') // throws error, no beginExtermination
-                                                 // action in current hierarchy
-         robotManager.getPath('currentState.name') // remains 'charging'
+      robotManager.send('beginExtermination') // throws error, no beginExtermination
+                                              // action in current hierarchy
+      robotManager.getPath('currentState.name') // remains 'charging'
 
-         robotManager.send('chargeComplete')
-         robotManager.getPath('currentState.name') // 'charged'
+      robotManager.send('chargeComplete')
+      robotManager.getPath('currentState.name') // 'charged'
 
-         robotManager.send('boot')
-         robotManager.getPath('currentState.name') // 'poweredUp'
+      robotManager.send('boot')
+      robotManager.getPath('currentState.name') // 'poweredUp'
 
-         robotManager.send('beginExtermination', allHumans)
-         robotManager.getPath('currentState.name') // 'rampaging'
+      robotManager.send('beginExtermination', allHumans)
+      robotManager.getPath('currentState.name') // 'rampaging'
 
 **/
 Ember.StateManager = Ember.State.extend(
@@ -16564,7 +16561,7 @@ Ember._RouteMatcher = Ember.Object.extend({
         escaped;
 
     // Strip off leading slash if present
-    if (route[0] === '/') {
+    if (route.charAt(0) === '/') {
       route = this.route = route.substr(1);
     }
 
@@ -16715,7 +16712,7 @@ Ember.State.reopen(Ember.Routable);
 (function() {
 Ember.Router = Ember.StateManager.extend({
   route: function(path) {
-    if (path[0] === '/') {
+    if (path.charAt(0) === '/') {
       path = path.substr(1);
     }
 
@@ -17493,6 +17490,8 @@ Ember.ViewState = Ember.State.extend({
   @description Helpers for Handlebars templates
 */
 
+Ember.assert("Ember Handlebars requires Handlebars 1.0.beta.5 or greater", window.Handlebars && window.Handlebars.VERSION.match(/^1\.0\.beta\.[56789]$/));
+
 /**
   @class
 
@@ -18001,14 +18000,15 @@ Ember._HandlebarsBoundView = Ember._MetamorphView.extend({
 // Copyright: ©2011 Strobe Inc. and contributors.
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
-var get = Ember.get, getPath = Ember.getPath, set = Ember.set, fmt = Ember.String.fmt;
-var normalizePath = Ember.Handlebars.normalizePath;
+var get = Ember.get, set = Ember.set, fmt = Ember.String.fmt;
+var getPath = Ember.Handlebars.getPath, normalizePath = Ember.Handlebars.normalizePath;
 var forEach = Ember.ArrayUtils.forEach;
 
 var EmberHandlebars = Ember.Handlebars, helpers = EmberHandlebars.helpers;
 
 // Binds a property into the DOM. This will create a hook in DOM that the
 // KVO system will look for and update if the property changes.
+/** @private */
 var bind = function(property, options, preserveContext, shouldDisplay, valueNormalizer) {
   var data = options.data,
       fn = options.fn,

@@ -1,13 +1,14 @@
 YardViewer = Ember.Application.create({
 
   load: function(data) {
+    var controller = this.getPath('stateManager.modulesController');
     data["@graph"].forEach(function(item) {
       switch(item.type) {
         case 'module':
-          YardViewer.modulesController.createModule(item);
+          controller.createModule(item);
           break;
         case 'method':
-          var module = YardViewer.modulesController.findProperty('path', item.namespace);
+          var module = controller.findProperty('path', item.namespace);
           if (module) {
             module.createMethod(item);
           } else {
@@ -17,7 +18,18 @@ YardViewer = Ember.Application.create({
       }
     });
   }
+});
 
+YardViewer.Router = Ember.Router.extend({
+  location: 'hash',
+
+  initialState: 'root',
+
+  root: Ember.State.extend({
+    index: Ember.State.extend({
+      route: '/'
+    })
+  })
 });
 
 YardViewer.Module = Ember.Object.extend({
@@ -36,7 +48,7 @@ YardViewer.Module = Ember.Object.extend({
 
 YardViewer.Method = Ember.Object.extend();
 
-YardViewer.modulesController = Ember.ArrayProxy.create({
+YardViewer.ModulesController = Ember.ArrayProxy.extend({
   content: [],
 
   createModule: function(data) {
@@ -44,3 +56,18 @@ YardViewer.modulesController = Ember.ArrayProxy.create({
     this.pushObject(module);
   }
 });
+
+// This is a hack to make router/stateManager work like magic :)
+YardViewer.registerInjection(function(namespace, stateManager, property) {
+  if (property === 'Router') {
+    var location = stateManager.get('location');
+
+    if (typeof location === 'string') {
+      stateManager.set('location', Ember.Location.create({style: location}));
+    }
+
+    YardViewer.set('stateManager', stateManager);
+  }
+});
+
+YardViewer.initialize(YardViewer.Router.create());
