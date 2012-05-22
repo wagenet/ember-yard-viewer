@@ -1,3 +1,18 @@
+// This is a hack to make router/stateManager work like magic :)
+Ember.onLoad('application', function(app) {
+  app.registerInjection(function(app, stateManager, property) {
+    if (property === 'Router') {
+      var location = stateManager.get('location');
+
+      if (typeof location === 'string') {
+        stateManager.set('location', Ember.Location.create({style: location}));
+      }
+
+      app.set('stateManager', stateManager);
+    }
+  });
+});
+
 YardViewer = Ember.Application.create({
 
   load: function(data) {
@@ -54,19 +69,6 @@ YardViewer.ModulesController = Ember.ArrayProxy.extend({
   createModule: function(data) {
     var module = YardViewer.Module.create(data);
     this.pushObject(module);
-  }
-});
-
-// This is a hack to make router/stateManager work like magic :)
-YardViewer.registerInjection(function(namespace, stateManager, property) {
-  if (property === 'Router') {
-    var location = stateManager.get('location');
-
-    if (typeof location === 'string') {
-      stateManager.set('location', Ember.Location.create({style: location}));
-    }
-
-    YardViewer.set('stateManager', stateManager);
   }
 });
 
